@@ -19,13 +19,13 @@ counter = None
 color = "y"
 
 
-delta = 3
-que_number = 200
-max_position = 1
-lot = 2
-two_way = False
+delta = 3  # 价格大于or小于平均价多少下单
+que_number = 200  # 统计过去多少个tick
+max_position = 1  # 最多开几单
+lot = 2  #  每次开几张
+two_way = False  # 如果有不同方向的信号，能不能开
 judge_way = 2 # 0: wam_avg, 1: simple_avg, 2: volume_wam_avg
-monitor_mode = True
+monitor_mode = True  # 是否开启监视模式（监视模式不会触发下单，只会喊单）
 
 if monitor_mode:
     mixer.init()
@@ -63,21 +63,25 @@ def order(text: str):
 
     defalut_lot = "1"
 
+    # 买入按钮的坐标
     buy_xy = {
         "x": 2405,
         "y": 620
     }
 
+    # 卖出按钮的坐标
     sell_xy = {
         "x": 2400,
         "y": 692
     }
 
+    # 输入张数的坐标
     amount_xy = {
         "x": 2344,
         "y": 476
     }
 
+    # 浏览器上任意一处空白处的坐标
     blank_xy = {
         "x": 2404,
         "y": 828
@@ -150,7 +154,7 @@ def order(text: str):
     except Exception as e:
         print(e)
 
-
+# 加权平均
 def wam(lst):
     n = len(lst)
     weight = 0.5 * (n + 1)
@@ -161,6 +165,7 @@ def wam(lst):
     return weight_sum / weight
 
 
+# 成交量加权平均
 def volume_wam(price_lst, volume_lst):
     n = len(price_lst)
     weight = sum(volume_lst)

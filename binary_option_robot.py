@@ -31,6 +31,12 @@ if monitor_mode:
     mixer.init()
 
 
+class coordinates:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
 
 class pycolor:
     BLACK = '\033[30m'
@@ -64,34 +70,22 @@ def order(text: str):
     defalut_lot = "1"
 
     # 买入按钮的坐标
-    buy_xy = {
-        "x": 2405,
-        "y": 620
-    }
+    buy_xy = coordinates(2405, 620)
 
     # 卖出按钮的坐标
-    sell_xy = {
-        "x": 2400,
-        "y": 692
-    }
+    sell_xy = coordinates(2400, 692)
 
     # 输入张数的坐标
-    amount_xy = {
-        "x": 2344,
-        "y": 476
-    }
+    amount_xy = coordinates(2344, 476)
 
     # 浏览器上任意一处空白处的坐标
-    blank_xy = {
-        "x": 2404,
-        "y": 828
-    }
+    blank_xy = coordinates(2404, 828)
 
     try:
         if text[0] == "b":
             if len(text) == 1:
-                pyautogui.click(amount_xy["x"], amount_xy["y"], button='left')
-                pyautogui.click(amount_xy["x"], amount_xy["y"], button='left')
+                pyautogui.click(amount_xy.x, amount_xy.y, button='left')
+                pyautogui.click(amount_xy.x, amount_xy.y, button='left')
                 pyautogui.hotkey('ctrl', 'a')
                 pyautogui.hotkey('ctrl', 'c')
                 # Mac OS
@@ -99,52 +93,52 @@ def order(text: str):
                 # pyautogui.hotkey('command', 'c')
 
                 if pyperclip.paste() != defalut_lot:
-                    pyautogui.click(amount_xy["x"], amount_xy["y"], button='left')
+                    pyautogui.click(amount_xy.x, amount_xy.y, button='left')
                     pyautogui.hotkey('ctrl', 'a')
                     # Mac OS
                     # pyautogui.hotkey('command', 'a')
                     pyautogui.typewrite(defalut_lot)
 
-                pyautogui.click(blank_xy["x"], blank_xy["y"], button='left')
-                pyautogui.click(buy_xy["x"], buy_xy["y"], button='left')
+                pyautogui.click(blank_xy.x, blank_xy.y, button='left')
+                pyautogui.click(buy_xy.x, buy_xy.y, button='left')
             else:
                 if text[1:].isdigit:
-                    pyautogui.click(amount_xy["x"], amount_xy["y"], button='left')
-                    pyautogui.click(amount_xy["x"], amount_xy["y"], button='left')
+                    pyautogui.click(amount_xy.x, amount_xy.y, button='left')
+                    pyautogui.click(amount_xy.x, amount_xy.y, button='left')
                     pyautogui.hotkey('ctrl', 'a')
                     # Mac OS
                     # pyautogui.hotkey('command', 'a')
                     pyautogui.typewrite(text[1:])
-                    pyautogui.click(blank_xy["x"], blank_xy["y"], button='left')
-                    pyautogui.click(buy_xy["x"], buy_xy["y"], button='left')
+                    pyautogui.click(blank_xy.x, blank_xy.y, button='left')
+                    pyautogui.click(buy_xy.x, buy_xy.y, button='left')
         elif text[0] == "s":
             if len(text) == 1:
-                pyautogui.click(amount_xy["x"], amount_xy["y"], button='left')
-                pyautogui.click(amount_xy["x"], amount_xy["y"], button='left')
+                pyautogui.click(amount_xy.x, amount_xy.y, button='left')
+                pyautogui.click(amount_xy.x, amount_xy.y, button='left')
                 pyautogui.hotkey('ctrl', 'a')
                 pyautogui.hotkey('ctrl', 'c')
                 # Mac OS
                 # pyautogui.hotkey('command', 'a')
                 # pyautogui.hotkey('command', 'c')
                 if pyperclip.paste() != defalut_lot:
-                    pyautogui.click(amount_xy["x"], amount_xy["y"], button='left')
+                    pyautogui.click(amount_xy.x, amount_xy.y, button='left')
                     pyautogui.hotkey('ctrl', 'a')
                     # Mac OS
                     # pyautogui.hotkey('command', 'a')
                     pyautogui.typewrite(defalut_lot)
 
-                pyautogui.click(blank_xy["x"], blank_xy["y"], button='left')
-                pyautogui.click(sell_xy["x"], sell_xy["y"], button='left')
+                pyautogui.click(blank_xy.x, blank_xy.y, button='left')
+                pyautogui.click(sell_xy.x, sell_xy.y, button='left')
             else:
                 if text[1:].isdigit:
-                    pyautogui.click(amount_xy["x"], amount_xy["y"], button='left')
-                    pyautogui.click(amount_xy["x"], amount_xy["y"], button='left')
+                    pyautogui.click(amount_xy.x, amount_xy.y, button='left')
+                    pyautogui.click(amount_xy.x, amount_xy.y, button='left')
                     pyautogui.hotkey('ctrl', 'a')
                     # Mac OS
                     # pyautogui.hotkey('command', 'a')
                     pyautogui.typewrite(text[1:])
-                    pyautogui.click(blank_xy["x"], blank_xy["y"], button='left')
-                    pyautogui.click(sell_xy["x"], sell_xy["y"], button='left')
+                    pyautogui.click(blank_xy.x, blank_xy.y, button='left')
+                    pyautogui.click(sell_xy.x, sell_xy.y, button='left')
 
         # pyautogui.hotkey('alt', 'tab')
 
@@ -265,12 +259,10 @@ def main():
     api_secret = ""
 
     if monitor_mode == False:
-        blank_xy = {
-            "x": 2404,
-            "y": 828
-        }
+        # 浏览器上任意一处空白处的坐标
+        blank_xy = coordinates(2404, 828)
 
-        pyautogui.click(blank_xy["x"], blank_xy["y"], button='left')
+        pyautogui.click(blank_xy.x, blank_xy.y, button='left')
 
     client = Client(api_key=api_key, api_secret=api_secret)
 

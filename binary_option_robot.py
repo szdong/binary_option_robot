@@ -170,9 +170,14 @@ def volume_wam(price_lst, volume_lst):
     return weight_sum / weight
 
 
+# 彩色打印
+def color_print(text:str, color:pycolor):
+    print(color + text + pycolor.END)
+
+
 def process_m_message(msg):
-    global wam_avg, price_que, position_count, volume_wam_avg, simple_avg, buy_position, sell_position, counter
-    global position_b, position_s, color
+    global wam_avg, price_que, position_count, volume_wam_avg, counter
+    global position_b, position_s, color, simple_avg, buy_position, sell_position
 
     print("stream: {}".format(msg['stream']))
     print(json.dumps(msg['data'], indent=4))
@@ -245,11 +250,11 @@ def process_m_message(msg):
     print("=====Simple_AVG:{0}=====".format(round(simple_avg, 5)))
     print("=====Volume_WAM:{0}=====".format(round(volume_wam_avg, 5)))
     if color == 'y':
-        print(pycolor.YELLOW + "==========Delta:{0}=====".format(round(abs(volume_wam_avg - float(msg['data']['p'])), 5)) + pycolor.END)
+        color_print("==========Delta:{0}=====".format(round(abs(volume_wam_avg - float(msg['data']['p'])), 5)), pycolor.YELLOW)
     elif color == 'g':
-        print(pycolor.GREEN + "==========Delta:{0}=====".format(round(abs(volume_wam_avg - float(msg['data']['p'])), 5)) + pycolor.END)
+        color_print("==========Delta:{0}=====".format(round(abs(volume_wam_avg - float(msg['data']['p'])), 5)), pycolor.GREEN)
     elif color == 'r':
-        print(pycolor.RED + "==========Delta:{0}=====".format(round(abs(volume_wam_avg - float(msg['data']['p'])), 5)) + pycolor.END)
+        color_print("==========Delta:{0}=====".format(round(abs(volume_wam_avg - float(msg['data']['p'])), 5)), pycolor.RED)
     print("=======Que Size:{0}=====".format(len(price_que)))
 
 

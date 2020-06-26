@@ -15,8 +15,8 @@ position_b = 0
 position_s = 0
 buy_position = 0
 sell_position = 0
+real_delta = 0
 counter = None
-color = "y"
 
 
 delta = 3  # 价格大于or小于平均价多少下单
@@ -176,8 +176,8 @@ def color_print(text:str, color:pycolor):
 
 
 def process_m_message(msg):
-    global wam_avg, price_que, position_count, volume_wam_avg, counter
-    global position_b, position_s, color, simple_avg, buy_position, sell_position
+    global wam_avg, price_que, position_count, volume_wam_avg, counter, real_delta
+    global position_b, position_s, simple_avg, buy_position, sell_position
 
     print("stream: {}".format(msg['stream']))
     print(json.dumps(msg['data'], indent=4))
@@ -194,14 +194,10 @@ def process_m_message(msg):
                                 order("b{}".format(lot))
                         position_count += 1
                         buy_position += 1
-                        color = 'g'
-                        print(pycolor.GREEN + "BUY" + pycolor.END)
+                        color_print("BUY", pycolor.GREEN)
                         if monitor_mode:
                             mixer.music.load("buy.mp3")
                             mixer.music.play(1)
-                    color = 'g'
-                else:
-                    color = 'y'
             else:
                 if counter - float(msg['data']['p']) >= delta:
                     if position_s < max_position:
@@ -212,13 +208,10 @@ def process_m_message(msg):
                                 order("s{}".format(lot))
                         position_count += 1
                         sell_position += 1
-                        print(pycolor.RED + "SELL" + pycolor.END)
+                        color_print("SELL", pycolor.RED)
                         if monitor_mode:
                             mixer.music.load("sell.mp3")
                             mixer.music.play(1)
-                    color = 'r'
-                else:
-                    color = 'y'
         else:
             position_count = 0
             buy_position = 0
@@ -232,6 +225,7 @@ def process_m_message(msg):
     wam_avg = wam(price_que)
     simple_avg = sum(price_que) / len(price_que)
     volume_wam_avg = volume_wam(price_que, volume_que)
+    real_delta = float(msg['data']['p']) - volume_wam_avg
 
     if judge_way == 0:
         counter = wam(price_que)
@@ -249,12 +243,17 @@ def process_m_message(msg):
     print("============WAM:{0}=====".format(round(wam_avg, 5)))
     print("=====Simple_AVG:{0}=====".format(round(simple_avg, 5)))
     print("=====Volume_WAM:{0}=====".format(round(volume_wam_avg, 5)))
-    if color == 'y':
-        color_print("==========Delta:{0}=====".format(round(abs(volume_wam_avg - float(msg['data']['p'])), 5)), pycolor.YELLOW)
-    elif color == 'g':
-        color_print("==========Delta:{0}=====".format(round(abs(volume_wam_avg - float(msg['data']['p'])), 5)), pycolor.GREEN)
-    elif color == 'r':
-        color_print("==========Delta:{0}=====".format(round(abs(volume_wam_avg - float(msg['data']['p'])), 5)), pycolor.RED)
+
+    if abs(real_delta) < delta:
+        if real_delta >= 0:
+            color_print("==========Delta:+{0}=====".format(round((float(msg['data']['p']) - volume_wam_avg), 5)), pycolor.YELLOW)
+        else:
+            color_print("==========Delta:{0}=====".format(round((float(msg['data']['p']) - volume_wam_avg), 5)), pycolor.YELLOW)
+    elif real_delta > 0 and abs(real_delta) >= delta:
+        color_print("==========Delta:+{0}=====".format(round((float(msg['data']['p']) - volume_wam_avg), 5)), pycolor.GREEN)
+    elif real_delta < 0 and abs(real_delta) >= delta:
+        color_print("==========Delta:{0}=====".format(round((float(msg['data']['p']) - volume_wam_avg), 5)), pycolor.RED)
+    
     print("=======Que Size:{0}=====".format(len(price_que)))
 
 
@@ -278,4 +277,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
